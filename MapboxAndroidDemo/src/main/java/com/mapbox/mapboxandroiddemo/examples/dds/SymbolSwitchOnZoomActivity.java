@@ -21,6 +21,10 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 
+/**
+ * Use the SymbolLayer's setMinZoom and setMaxZoom methods to create the effect of SymbolLayer icons switching
+ * based on the map camera's zoom level.
+ */
 public class SymbolSwitchOnZoomActivity extends AppCompatActivity implements OnMapReadyCallback {
 
   private static final String BLUE_PERSON_ICON_ID = "blue-car-icon-marker-icon-id";
@@ -54,19 +58,24 @@ public class SymbolSwitchOnZoomActivity extends AppCompatActivity implements OnM
       Toast.LENGTH_SHORT).show();
   }
 
-
+  /**
+   * Add images to the map so that the SymbolLayers can reference the images.
+   */
   private void initLayerIcons() {
-    Bitmap personIcon = BitmapUtils.getBitmapFromDrawable(
+    Bitmap bluePersonIcon = BitmapUtils.getBitmapFromDrawable(
       getResources().getDrawable(R.drawable.ic_person));
 
     Bitmap bluePinIcon = BitmapUtils.getBitmapFromDrawable(
       getResources().getDrawable(R.drawable.blue_marker));
 
-    mapboxMap.addImage(BLUE_PERSON_ICON_ID, personIcon);
+    mapboxMap.addImage(BLUE_PERSON_ICON_ID, bluePersonIcon);
 
     mapboxMap.addImage(BLUE_PIN_ICON_ID, bluePinIcon);
   }
 
+  /**
+   * Add the GeoJsonSource and SymbolLayers to the map.
+   */
   private void addDataToMap() {
     // Add a new source from the GeoJSON data
     mapboxMap.addSource(
@@ -99,25 +108,30 @@ public class SymbolSwitchOnZoomActivity extends AppCompatActivity implements OnM
         })
       )
     );
-
-    //Creating a SymbolLayer icon layer
-    SymbolLayer bluePersonSymbolLayer = new SymbolLayer("blue-person-symbol-layer-id", "source-id");
-    bluePersonSymbolLayer.setProperties(
-      iconImage(BLUE_PERSON_ICON_ID),
-      iconIgnorePlacement(true),
-      iconAllowOverlap(true));
-    bluePersonSymbolLayer.setMaxZoom(ZOOM_LEVEL_FOR_SWITCH);
-    mapboxMap.addLayer(bluePersonSymbolLayer);
-
-    SymbolLayer bluePinSymbolLayer = new SymbolLayer("blue-pin-symbol-layer-id", "source-id");
-    bluePinSymbolLayer.setProperties(
-      iconImage(BLUE_PIN_ICON_ID),
-      iconIgnorePlacement(true),
-      iconAllowOverlap(true));
-    bluePinSymbolLayer.setMinZoom(ZOOM_LEVEL_FOR_SWITCH);
-    mapboxMap.addLayer(bluePinSymbolLayer);
+    mapboxMap.addLayer(createLayer(BLUE_PERSON_ICON_ID, false));
+    mapboxMap.addLayer(createLayer(BLUE_PIN_ICON_ID, true));
   }
 
+  /**
+   * This method creates a SymbolLayer which is ready to be added to the map.
+   *
+   * @param iconId The unique id of the image which the SymbolLayer should use for its symbol icon
+   * @param setMin Whether or not a minimum or maximum zoom level should be set on the SymbolLayer.
+   * @return a completed SymbolLayer which is ready to add to the map.
+   */
+  private SymbolLayer createLayer(String iconId, boolean setMin) {
+    SymbolLayer singleLayer = new SymbolLayer(iconId + "symbol-layer-id", "source-id");
+    singleLayer.setProperties(
+      iconImage(iconId),
+      iconIgnorePlacement(true),
+      iconAllowOverlap(true));
+    if (setMin) {
+      singleLayer.setMinZoom(ZOOM_LEVEL_FOR_SWITCH);
+    } else {
+      singleLayer.setMaxZoom(ZOOM_LEVEL_FOR_SWITCH);
+    }
+    return singleLayer;
+  }
 
   @Override
   public void onStart() {
