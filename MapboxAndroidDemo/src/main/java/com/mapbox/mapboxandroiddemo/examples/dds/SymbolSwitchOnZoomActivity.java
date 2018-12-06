@@ -27,7 +27,7 @@ public class SymbolSwitchOnZoomActivity extends AppCompatActivity implements OnM
   private static final String BLUE_PIN_ICON_ID = "blue-marker-icon-marker-icon-id";
   private MapView mapView;
   private MapboxMap mapboxMap;
-  private static final float ZOOM_LEVEL_FOR_SWITCH = 14;
+  private static final float ZOOM_LEVEL_FOR_SWITCH = 12;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
