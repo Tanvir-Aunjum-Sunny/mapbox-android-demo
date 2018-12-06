@@ -285,4 +285,8 @@
 
     <!-- Isochrone change -->
     <string name="click_on_map_instruction">Tap on the map!</string>
+
+    <!-- Zoom based icon change -->
+    <string name="zoom_map_in_and_out_icon_switch_instruction">Zoom in and out to see the icons change</string>
+
 </resources>
