@@ -285,4 +285,12 @@
 
     <!-- Isochrone change -->
     <string name="click_on_map_instruction">Tap on the map!</string>
+
+    <!-- Pin drop animation -->
+    <string name="interperlator_select">Select an interpolator</string>
+    <string name="bounce_interpolator">Bounce interpolator</string>
+    <string name="linear_interpolator">Linear interpolator</string>
+    <string name="accelerate_interpolator">Accelerate interpolator</string>
+    <string name="decelerate_interpolator">Decelerate interpolator</string>
+
 </resources>
