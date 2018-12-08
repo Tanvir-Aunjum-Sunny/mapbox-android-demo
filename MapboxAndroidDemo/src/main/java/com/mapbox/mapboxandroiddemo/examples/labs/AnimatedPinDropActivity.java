@@ -22,7 +22,6 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
@@ -82,6 +81,11 @@ public class AnimatedPinDropActivity extends AppCompatActivity implements
     addDataToMap();
   }
 
+  /**
+   * Implementing this interface so that animation only starts once all tiles have been loaded
+   *
+   * @param fully whether or not the mapy is finished rendering
+   */
   @Override
   public void onDidFinishRenderingMap(boolean fully) {
     initAnimation(currentSelectedTimeInterpolator);
@@ -105,6 +109,9 @@ public class AnimatedPinDropActivity extends AppCompatActivity implements
     initDataSource();
   }
 
+  /**
+   * Add GeoJsonSource with Features to the map.
+   */
   private void initDataSource() {
     // Add a new source from the GeoJSON data
     mapboxMap.addSource(
@@ -142,6 +149,12 @@ public class AnimatedPinDropActivity extends AppCompatActivity implements
     );
   }
 
+  /**
+   * Initialize and start the animation.
+   *
+   * @param desiredTimeInterpolator the type of Android system movement to animate the
+   *                                SymbolLayer icons with.
+   */
   private void initAnimation(TimeInterpolator desiredTimeInterpolator) {
     ValueAnimator animator = ValueAnimator.ofFloat(STARTING_DROP_HEIGHT, 0);
     animator.setDuration(DROP_SPEED_MILLISECONDS);
@@ -157,6 +170,9 @@ public class AnimatedPinDropActivity extends AppCompatActivity implements
     });
   }
 
+  /**
+   * Add the SymbolLayer to the map
+   */
   private void initSymbolLayer() {
     pinSymbolLayer = new SymbolLayer("symbol-layer-id" + counter, "source-id" + counter);
     pinSymbolLayer.setProperties(
@@ -167,6 +183,9 @@ public class AnimatedPinDropActivity extends AppCompatActivity implements
     mapboxMap.addLayer(pinSymbolLayer);
   }
 
+  /**
+   * Initialize the interpolator selection spinner menu
+   */
   private void initSpinnerMenu() {
     Spinner interpolatorSelectionSpinnerMenu = findViewById(R.id.interpolator_selection_spinner_menu);
     ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -176,7 +195,6 @@ public class AnimatedPinDropActivity extends AppCompatActivity implements
         getString(R.string.accelerate_interpolator),
         getString(R.string.decelerate_interpolator),
     });
-
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     interpolatorSelectionSpinnerMenu.setAdapter(adapter);
     interpolatorSelectionSpinnerMenu.setOnItemSelectedListener(this);
@@ -211,7 +229,7 @@ public class AnimatedPinDropActivity extends AppCompatActivity implements
 
   @Override
   public void onNothingSelected(AdapterView<?> adapterView) {
-
+    // Left empty on purpose
   }
 
   @Override
