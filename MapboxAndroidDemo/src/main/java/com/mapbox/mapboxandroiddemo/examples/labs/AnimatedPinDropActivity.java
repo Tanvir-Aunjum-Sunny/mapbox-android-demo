@@ -33,11 +33,15 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconTranslate;
 
 /**
- * Combine SymbolLayer icons with the Android system's motion animation for a fun pin drop effect.
- * More info about motion at https://developer.android.com/guide/topics/graphics/spring-animation
+ * Combine SymbolLayer icons with the Android system's ValueAnimator and interpolator
+ * animation for a fun pin drop effect. The interpolator movement can also be used with other
+ * types of map layers, such as a LineLayer or CircleLayer.
+ *
+ * More info about https://developer.android.com/reference/android/view/animation/Interpolator
  */
 public class AnimatedPinDropActivity extends AppCompatActivity implements
-    OnMapReadyCallback, MapView.OnDidFinishRenderingMapListener, AdapterView.OnItemSelectedListener {
+    OnMapReadyCallback, MapView.OnDidFinishRenderingMapListener,
+    AdapterView.OnItemSelectedListener {
 
   private static final String ICON_ID = "red-pin-icon-id";
   private static final String TAG = "PinDropActivity";
@@ -166,7 +170,8 @@ public class AnimatedPinDropActivity extends AppCompatActivity implements
         initSymbolLayer();
         animationHasStarted = true;
       }
-      pinSymbolLayer.setProperties(iconTranslate(new Float[]{0f, (Float) valueAnimator.getAnimatedValue()}));
+      pinSymbolLayer.setProperties(iconTranslate(new Float[]{0f,
+          (Float) valueAnimator.getAnimatedValue()}));
     });
   }
 
@@ -174,7 +179,8 @@ public class AnimatedPinDropActivity extends AppCompatActivity implements
    * Add the SymbolLayer to the map
    */
   private void initSymbolLayer() {
-    pinSymbolLayer = new SymbolLayer("symbol-layer-id" + counter, "source-id" + counter);
+    pinSymbolLayer = new SymbolLayer("symbol-layer-id" + counter,
+        "source-id" + counter);
     pinSymbolLayer.setProperties(
         iconImage(ICON_ID),
         iconIgnorePlacement(true),
@@ -187,7 +193,8 @@ public class AnimatedPinDropActivity extends AppCompatActivity implements
    * Initialize the interpolator selection spinner menu
    */
   private void initSpinnerMenu() {
-    Spinner interpolatorSelectionSpinnerMenu = findViewById(R.id.interpolator_selection_spinner_menu);
+    Spinner interpolatorSelectionSpinnerMenu = findViewById(
+        R.id.interpolator_selection_spinner_menu);
     ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
         android.R.layout.simple_spinner_item, new String[]{
         getString(R.string.bounce_interpolator),
